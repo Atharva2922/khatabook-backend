@@ -5,6 +5,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
+const transactionRoutes = require('./routes/transactions');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,10 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 // Database Connection
-// Option 1: Use environment variable (for MongoDB Atlas or cloud deployment)
-// Option 2: Fall back to local MongoDB
-// To use MongoDB Atlas: Set MONGODB_URI environment variable
-// Example: MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/khatabook_db
+// ... (comments omitted for brevity)
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/khatabook_db';
 
 console.log('Connecting to MongoDB...');
@@ -33,6 +31,7 @@ mongoose.connect(MONGODB_URI)
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/transactions', transactionRoutes);
 
 app.get('/', (req, res) => {
   res.send('Khatabook Backend is running');
