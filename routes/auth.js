@@ -65,4 +65,32 @@ router.post('/forgot-password', async (req, res) => {
     res.send({ message: 'Reset link sent to ' + req.body.email });
 });
 
+// Middleware for protected routes
+const auth = require('../middleware/auth');
+
+// GET USER PROFILE (Protected Route)
+router.get('/profile', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select('-password');
+        if (!user) return res.status(404).send({ message: 'User not found' });
+
+        res.send({
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+});
+
+// LOGOUT (Client-side token clearing)
+router.post('/logout', (req, res) => {
+    // Since JWT is stateless, logout is handled client-side by removing the token
+    // This endpoint is just for confirmation/logging purposes
+    res.send({ message: 'Logged out successfully' });
+});
+
 module.exports = router;
